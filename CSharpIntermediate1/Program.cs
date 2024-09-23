@@ -20,6 +20,14 @@ namespace CSharpIntermediate1
         {
             Console.WriteLine("Person - {0}, {1}", LastName, FirstName);
         }
+        public virtual int CalculateYearlyIncome(int year)
+        {
+            if (year < 2000)
+            {
+                return 50000;
+            }
+            return 10000;
+        }
     }
     class Employee : Person
     {
@@ -34,6 +42,12 @@ namespace CSharpIntermediate1
         public override void Display()
         {
             Console.WriteLine("Employee - {0}, {1}, {2}", LastName, FirstName, YearlyIncome);
+        }
+
+        // virtual class is overriden and ".base.{method}" is used to use base method
+        public override int CalculateYearlyIncome(int year)
+        {
+            return base.CalculateYearlyIncome(year) * 100;
         }
 
         class Child : Employee
