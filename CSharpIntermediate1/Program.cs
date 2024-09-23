@@ -7,18 +7,41 @@ namespace CSharpIntermediate1
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
+        public Person(string firstName, string lastName)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+        }
+        public Person(string name)
+        {
+            // This is a second constructor, so we can choose which constructor we need
+        }
         public virtual void Display()
         {
             Console.WriteLine("Person - {0}, {1}", LastName, FirstName);
         }
     }
-
     class Employee : Person
     {
         public int YearlyIncome { get; set; }
+
+        // We have to create a new constructor because constructors don't get inherited
+        // We delegate some args to the base class by using ": base(...)"
+        public Employee(string firstName, string lastName, int yearlyIncome) : base(firstName, lastName)
+        {
+            YearlyIncome = yearlyIncome;
+        }
         public override void Display()
         {
             Console.WriteLine("Employee - {0}, {1}, {2}", LastName, FirstName, YearlyIncome);
+        }
+
+        class Child : Employee
+        {
+            public Child() : base("first name", "second name", 1)
+            {
+                // This 3rd class is invoking only the constructor of its parent
+            }
         }
 
         internal class Program
@@ -26,16 +49,12 @@ namespace CSharpIntermediate1
             static void Main(string[] args)
             {
                 List<Person> people = new List<Person>();
-                //Person p1 = new Person();
-                //p1.FirstName = "Nelson";
-                //p1.LastName = "LaQuet";
-                //people.Add(p1);
 
-                //Employee nelson = new Employee();
-                //nelson.FirstName = "Nelson";
-                //nelson.LastName = "LaQuet";
-                //nelson.YearlyIncome = 10;
-                //people.Add(nelson);
+                Person p1 = new Person("Nelson", "LeQuet");
+                people.Add(p1);
+
+                Employee e1 = new Employee("Whoa", "Hey", 23);
+                people.Add(e1);
 
                 for (int i = 0; i < 5; i++)
                 {
@@ -48,7 +67,6 @@ namespace CSharpIntermediate1
                 }
                 Console.ReadKey();
             }
-
             static Person GetPersonFromInput()
             {
                 while (true)
@@ -58,23 +76,19 @@ namespace CSharpIntermediate1
 
                     if (choice == 1)
                     {
-                        Person person = new Person();
-                        person.FirstName = GetString("First Name");
-                        person.LastName = GetString("Last Name");
-                        return person;
+                        return new Person(GetString("First Name"), GetString("Last Name"));
                     }
 
                     if (choice == 2)
                     {
-                        Employee employee = new Employee();
-                        employee.FirstName = GetString("First Name");
-                        employee.LastName = GetString("Last Name");
-
-                        Console.WriteLine("Yearly Income: ");
-                        employee.YearlyIncome = int.Parse(Console.ReadLine());
-                        return employee;
+                        return new Employee(GetString("First Name"), GetString("Last Name"), GetInt("Yearly Income"));
                     }
                 }
+            }
+            static int GetInt(string prompt)
+            {
+                Console.Write("{0}> ", prompt);
+                return int.Parse(Console.ReadLine());
             }
 
             static string GetString(string prompt)
