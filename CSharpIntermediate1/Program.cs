@@ -309,53 +309,170 @@
 
 #region
 
-// Inheritence and abstract classes used in an algorithm called TEMPLATE METHOD
+//// Inheritence and abstract classes used in an algorithm called TEMPLATE METHOD
+
+//namespace CSharpIntermediate1
+//{
+//    abstract class EvenNumbergenerator
+//    {
+//        public void Run(int min, int max)
+//        {
+//            for (int i = min; i <= max; i++)
+//            {
+//                if ((i % 2) == 0)
+//                {
+//                    ProcessNumber(i);
+//                }
+//            }
+//        }
+//        public abstract void ProcessNumber(int number);
+//    }
+
+//    class ConsoleEvenNumberPrinter : EvenNumbergenerator
+//    {
+//        public override void ProcessNumber(int number)
+//        {
+//            Console.WriteLine("Even number: {0}", number);
+//        }
+//    }
+
+//    class FileEvenNumberPrinter : EvenNumbergenerator
+//    {
+//        public override void ProcessNumber(int number)
+//        {
+//            Console.WriteLine("Pretend this is prtinted on a file: {0}", number);
+//        }
+//    }
+//    internal class Program
+//    {
+//        static void Main(string[] args)
+//        {
+//            ConsoleEvenNumberPrinter printer = new ConsoleEvenNumberPrinter();
+//            printer.Run(1, 200);
+
+//            FileEvenNumberPrinter printer2 = new FileEvenNumberPrinter();
+//            printer2.Run(200, 500);
+
+//            Console.ReadKey();
+//        }
+//    }
+//}
+
+#endregion
+
+#region
 
 namespace CSharpIntermediate1
 {
-    abstract class EvenNumbergenerator
+    class GraphicsCard
     {
-        public void Run(int min, int max)
+        public virtual void Render()
         {
-            for (int i = min; i <= max; i++)
-            {
-                if ((i % 2) == 0)
-                {
-                    ProcessNumber(i);
-                }
-            }
-        }
-        public abstract void ProcessNumber(int number);
-    }
 
-    class ConsoleEvenNumberPrinter : EvenNumbergenerator
-    {
-        public override void ProcessNumber(int number)
-        {
-            Console.WriteLine("Even number: {0}", number);
         }
     }
-
-    class FileEvenNumberPrinter : EvenNumbergenerator
+    class CPU
     {
-        public override void ProcessNumber(int number)
+        public int CountOfCores { get; private set; }
+        public CPU(int countOfCores)
         {
-            Console.WriteLine("Pretend this is prtinted on a file: {0}", number);
+            CountOfCores = countOfCores;
+        }
+
+        public virtual void Compute()
+        {
+
+        }
+    }
+    class Motherboard
+    {
+        public virtual void DoStuff()
+        {
+
+        }
+    }
+    class Computer
+    {
+        public GraphicsCard GraphicsCard { get; private set; }
+        public CPU CPU { get; private set; }
+        public Motherboard Motherboard { get; private set; }
+        public Computer(GraphicsCard graphicsCard, CPU cpu, Motherboard motherboard)
+        {
+            GraphicsCard = graphicsCard;
+            CPU = cpu;
+            Motherboard = motherboard;
+        }
+        public void Run()
+        {
+            CPU.Compute();
+            GraphicsCard.Render();
+            Motherboard.DoStuff();
+        }
+    }
+    class NVidia : GraphicsCard
+    {
+        private string _series;
+        public NVidia(string series)
+        {
+            _series = series;
+        }
+        public override void Render()
+        {
+            Console.WriteLine("Rendering GraphicsCard with series {0}", _series);
+        }
+    }
+    class Intel : CPU
+    {
+        private string _series;
+        public Intel(int cores, string series) : base(cores)
+        {
+            _series = series;
+        }
+        public override void Compute()
+        {
+            Console.WriteLine("Intel CPU: series {0} with {1} cores", _series, CountOfCores);
+        }
+    }
+    class Asus : Motherboard
+    {
+        private string _series;
+        private string _cpuSocket;
+        public Asus(string series, string cpuSocket)
+        {
+            _series = series;
+            _cpuSocket = cpuSocket;
+        }
+        public override void DoStuff()
+        {
+            Console.WriteLine("Doing stuff with Asus mobo {0} with cpu socket {1}", _series, _cpuSocket);
         }
     }
     internal class Program
     {
         static void Main(string[] args)
         {
-            ConsoleEvenNumberPrinter printer = new ConsoleEvenNumberPrinter();
-            printer.Run(1, 200);
-
-            FileEvenNumberPrinter printer2 = new FileEvenNumberPrinter();
-            printer2.Run(200, 500);
+            Computer computer = new Computer(new NVidia("GTX 500"), new Intel(4, "i7"), new Asus("stuff", "LG6013"));
+            computer.Run();
 
             Console.ReadKey();
         }
     }
 }
+
+#endregion
+
+#region
+
+//\\// HOMEWORK \\//\\
+// Create an abstract Pet class that has abstract functionality (at least 3 methods).
+// It must have a "string Name" read-only property that is filled by a paramater to the ctor.
+// At least one of the methods must take in paramaters,
+// and at least one of the methods must return a value instead of printing things to the console.
+// Create four implementations of the Pet class that all appropriately implement the different methods.
+// Allow the user to enter 0 to many pets (can be any type) and store them into a List<Pet> object.
+// After the user is done entering in pets, allow the user to
+// A) select a pet
+// B) perform an operation
+// - You will have to collect the arguments from the user required to invoke a method that has paramaters. C) Repeat A-B until the user decides to quit
 
 #endregion
